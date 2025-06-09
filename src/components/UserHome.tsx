@@ -7,12 +7,17 @@ import HomePosts from './HomePosts';
 import Preloader from './Preloader';
 
 export default function UserHome({ privyId }: { privyId: string }) {
+  const [topUsers, setTopUsers] = useState<Profile[]>([]);
   const [followerProfiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        fetch('/api/profiles')
+          .then((res) => res.json())
+          .then((users: Profile[]) => setTopUsers(users.filter(u => u.privyId !== privyId)));
+
         const followsData: { followedProfileId: string }[] = await fetch(
           `/api/follows?followerId=${privyId}`
         ).then((res) => res.json());
@@ -39,7 +44,7 @@ export default function UserHome({ privyId }: { privyId: string }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <HomeTopRow profiles={followerProfiles} />
+      <HomeTopRow profiles={topUsers} />
       <HomePosts followers={followerProfiles} />
     </div>
   );

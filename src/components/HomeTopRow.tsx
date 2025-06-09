@@ -27,13 +27,13 @@ export default function HomeTopRow({
         {profiles.length === 0 && <p className="text-center text-gray-400 text-sm">No profiles</p>}
         {profiles.map((profile) => (
           <div key={profile.username} className="w-24 flex flex-col justify-center items-center">
-            <div>
+            <button type='button' onClick={() => router.push(`/users/${profile.id}`)}>
               <div className="inline-block p-1 rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">
                 <div className="inline-block p-0.5 bg-white dark:bg-black rounded-full">
                   <Avatar size="6" radius="full" fallback={'avatar'} src={profile.avatar || ''} />
                 </div>
               </div>
-            </div>
+            </button>
             <p className="text-center text-gray-400 text-sm">{profile.username}</p>
           </div>
         ))}

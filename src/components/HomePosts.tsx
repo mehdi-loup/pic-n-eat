@@ -31,7 +31,7 @@ export default function HomePosts({
 
   return (
     <div className="max-w-md mx-auto flex flex-col gap-12">
-      {loading ? <Preloader /> : posts.map((post) => {
+      {loading ? <Preloader /> : posts.length === 0 ? 'No post yet' : posts.map((post) => {
         const profile = followers.find((p) => p.privyId === post.author);
         return (
           <div key={post.id} className="">

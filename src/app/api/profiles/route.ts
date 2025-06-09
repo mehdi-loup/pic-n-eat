@@ -5,16 +5,14 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const ids = searchParams.get('ids');
 
-  if (!ids) {
-    return NextResponse.json({ error: 'Profile IDs are required' }, { status: 400 });
-  }
-
   try {
-    const profileIds = ids.split(',');
+    const where = ids
+      ? {
+          id: { in: ids.split(',') },
+        }
+      : undefined;
     const profiles = await prisma.profile.findMany({
-      where: {
-        id: { in: profileIds },
-      },
+      where,
     });
     return NextResponse.json(profiles);
   } catch (e) {

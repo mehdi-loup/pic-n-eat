@@ -22,7 +22,6 @@ export default function UserProfilePage({
       setUserProfile(profilesData);
 
       const ourFollowData = await fetch(`/api/follows?followerId=${connectedUser.id}&followeeId=${profilesData.id}`).then((res) => res.json());
-      console.log(ourFollowData)
       setOurFollow(ourFollowData.length > 0)
       setLoading(false);
     }
