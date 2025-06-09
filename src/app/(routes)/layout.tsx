@@ -1,23 +1,22 @@
 'use client';
-import DesktopNav from "@/components/DesktopNav";
-import MobileNav from "@/components/MobileNav";
-import ThemeObserver from "@/components/ThemeObserver";
-import { Theme } from "@radix-ui/themes";
-import localFont from "next/font/local";
-import "../globals.css";
-import "@radix-ui/themes/styles.css";
+import DesktopNav from '@/components/DesktopNav';
+import MobileNav from '@/components/MobileNav';
+import ThemeObserver from '@/components/ThemeObserver';
+import { Theme } from '@radix-ui/themes';
+import localFont from 'next/font/local';
+import '../globals.css';
+import '@radix-ui/themes/styles.css';
 import { type PrivyClientConfig, PrivyProvider } from '@privy-io/react-auth';
 
-
 const geistSans = localFont({
-  src: "../fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+  src: '../fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
+  weight: '100 900',
 });
 const geistMono = localFont({
-  src: "../fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+  src: '../fonts/GeistMonoVF.woff',
+  variable: '--font-geist-mono',
+  weight: '100 900',
 });
 
 const config: PrivyClientConfig = {
@@ -33,12 +32,13 @@ export default function RootLayout({
   modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode,
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-black dark:text-red-500`}>
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-black dark:text-red-500`}
+      >
         <Theme>
           {modal}
           <div className="flex min-h-screen dark:bg-gray-800 dark:text-gray-300">

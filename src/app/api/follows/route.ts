@@ -1,5 +1,5 @@
-import { prisma } from "@/db";
-import { NextResponse } from "next/server";
+import { prisma } from '@/db';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -20,4 +20,4 @@ export async function GET(request: Request) {
     console.error(e);
     return NextResponse.json({ error: 'Failed to fetch follows' }, { status: 500 });
   }
-} 
+}

@@ -1,15 +1,13 @@
 'use client';
-import type { Follower, Profile } from '@prisma/client';
+import type { UserInfo } from '@/types';
 import { Avatar } from '@radix-ui/themes';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function HomeTopRow({
-  follows,
   profiles,
 }: {
-  follows: Follower[];
-  profiles: Profile[];
+  profiles: UserInfo[];
 }) {
   const router = useRouter();
 
@@ -28,7 +26,7 @@ export default function HomeTopRow({
         </div>
         {profiles.length === 0 && <p className="text-center text-gray-400 text-sm">No profiles</p>}
         {profiles.map((profile) => (
-          <div key={profile.id} className="w-24 flex flex-col justify-center items-center">
+          <div key={profile.username} className="w-24 flex flex-col justify-center items-center">
             <div>
               <div className="inline-block p-1 rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">
                 <div className="inline-block p-0.5 bg-white dark:bg-black rounded-full">

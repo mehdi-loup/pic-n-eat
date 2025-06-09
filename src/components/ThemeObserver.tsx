@@ -1,5 +1,5 @@
 'use client';
-import {useEffect} from "react";
+import { useEffect } from 'react';
 
 export default function ThemeObserver() {
   useEffect(() => {
@@ -10,9 +10,5 @@ export default function ThemeObserver() {
       }
     }
   }, []);
-  return (
-    <>
-
-    </>
-  );
+  return <></>;
 }

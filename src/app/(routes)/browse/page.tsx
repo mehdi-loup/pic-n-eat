@@ -1,9 +1,9 @@
-import PostsGrid from "@/components/PostsGrid";
-import {prisma} from "@/db";
+import PostsGrid from '@/components/PostsGrid';
+import { prisma } from '@/db';
 
 export default async function BrowsePage() {
   const posts = await prisma.post.findMany({
-    orderBy: {createdAt: 'desc'},
+    orderBy: { createdAt: 'desc' },
     take: 100,
   });
   return (
@@ -12,7 +12,7 @@ export default async function BrowsePage() {
       {/*  <h1 className="text-4xl font-bold text-slate-900">Browse</h1>*/}
       {/*  <p className="text-gray-500">Check trending posts and find some inspiration</p>*/}
       {/*</div>*/}
-      <PostsGrid posts={posts}/>
+      <PostsGrid posts={posts} />
     </div>
   );
 }

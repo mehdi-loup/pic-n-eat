@@ -1,12 +1,12 @@
 'use client';
-import ProfilePageContent from "@/components/ProfilePageContent";
-import { usePrivy } from "@privy-io/react-auth";
-import { useRouter } from "next/navigation";
+import ProfilePageContent from '@/components/ProfilePageContent';
+import { usePrivy } from '@privy-io/react-auth';
+import { useRouter } from 'next/navigation';
 
 export default async function ProfilePage() {
   const { user } = usePrivy();
   const router = useRouter();
-  
+
   if (!user?.farcaster) {
     return router.push('/settings');
   }
@@ -22,6 +22,7 @@ export default async function ProfilePage() {
         name: user.farcaster.displayName,
         subtitle: user.farcaster.bio,
       }}
-      isOurProfile={true} />
+      isOurProfile={true}
+    />
   );
 }

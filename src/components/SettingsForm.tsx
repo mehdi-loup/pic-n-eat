@@ -50,7 +50,11 @@ export default function SettingsForm({
         placeholder="your_username"
       />
       <p className="mt-2 font-bold">name</p>
-      <TextField.Root name="name" defaultValue={user.farcaster?.displayName || ''} placeholder="John Doe" />
+      <TextField.Root
+        name="name"
+        defaultValue={user.farcaster?.displayName || ''}
+        placeholder="John Doe"
+      />
       <p className="mt-2 font-bold">subtitle</p>
       <TextField.Root
         name="subtitle"

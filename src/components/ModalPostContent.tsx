@@ -1,11 +1,9 @@
-import {getSinglePostData} from "@/actions";
-import SinglePostContent from "@/components/SinglePostContent";
+import { getSinglePostData } from '@/actions';
+import SinglePostContent from '@/components/SinglePostContent';
 
-export default async function ModalPostContent({postId}:{postId:string}) {
-  const {
-    post, authorProfile, comments,
-    commentsAuthors, myLike, myBookmark,
-  } = await getSinglePostData(postId);
+export default async function ModalPostContent({ postId }: { postId: string }) {
+  const { post, authorProfile, comments, commentsAuthors, myLike } =
+    await getSinglePostData(postId);
   return (
     <SinglePostContent
       post={post}
@@ -13,7 +11,6 @@ export default async function ModalPostContent({postId}:{postId:string}) {
       comments={comments}
       commentsAuthors={commentsAuthors}
       myLike={myLike}
-      myBookmark={myBookmark}
     />
   );
 }
