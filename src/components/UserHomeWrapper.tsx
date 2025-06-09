@@ -13,9 +13,9 @@ export default function UserHomeWrapper() {
     onComplete: ({ user }) => {
       upsertProfile(
         {
-          avatar: user.farcaster?.pfp || '',
-          name: user.farcaster?.displayName || '',
-          username: user.farcaster?.username || '',
+          avatar: user.farcaster?.pfp || user.twitter?.profilePictureUrl || '',
+          name: user.farcaster?.displayName || user.twitter?.name || '',
+          username: user.farcaster?.username || user.twitter?.username || '',
           subtitle: user.farcaster?.url || '',
           bio: user.farcaster?.bio || '',
         },
@@ -43,7 +43,7 @@ export default function UserHomeWrapper() {
 
   return (
     <Suspense fallback={<Preloader />}>
-      <UserHome email={user.email?.address || user.id} />
+      <UserHome privyId={user.id} />
     </Suspense>
   );
 }

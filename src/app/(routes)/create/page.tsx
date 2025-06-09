@@ -41,7 +41,7 @@ export default function CreatePage() {
       action={async (data) => {
         const id = await postEntry(data, user);
         router.push(`/posts/${id}`);
-        router.refresh();
+        router.prefetch('/browse');
       }}
     >
       <input type="hidden" name="image" value={imageUrl} />

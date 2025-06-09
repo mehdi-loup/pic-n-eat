@@ -1,27 +1,22 @@
-import Preloader from '@/components/Preloader';
-import ProfileNav from '@/components/ProfileNav';
+'use client';
 import ProfilePageInfo from '@/components/ProfilePageInfo';
 import ProfilePosts from '@/components/ProfilePosts';
-import type { Follower, Profile } from '@prisma/client';
-import { Suspense } from 'react';
+import type { Profile } from '@prisma/client';
 
 export default function ProfilePageContent({
   profile,
   isOurProfile = false,
-  ourFollow = null,
+  ourFollow = false,
 }: {
-  profile: Omit<Profile, 'id'>;
+  profile: Profile;
   isOurProfile?: boolean;
-  ourFollow: Follower | null;
+  ourFollow: boolean;
 }) {
   return (
     <main>
       <ProfilePageInfo profile={profile} isOurProfile={isOurProfile} ourFollow={ourFollow} />
-      <ProfileNav username={profile.username || ''} isOurProfile={isOurProfile} />
       <section className="mt-4">
-        <Suspense fallback={<Preloader />}>
-          <ProfilePosts email={profile.privyId} />
-        </Suspense>
+        <ProfilePosts privyId={profile.privyId} />
       </section>
     </main>
   );

@@ -1,19 +1,20 @@
 'use client';
 import HomeTopRow from '@/components/HomeTopRow';
 import type { UserInfo } from '@/types';
+import type { Profile } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import HomePosts from './HomePosts';
 import Preloader from './Preloader';
 
-export default function UserHome({ email }: { email: string }) {
-  const [profiles, setProfiles] = useState<UserInfo[]>([]);
+export default function UserHome({ privyId }: { privyId: string }) {
+  const [followerProfiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const followsData: { followedProfileId: string }[] = await fetch(
-          `/api/follows?privyId=${email}`
+          `/api/follows?followerId=${privyId}`
         ).then((res) => res.json());
 
         if (followsData.length > 0) {
@@ -30,7 +31,7 @@ export default function UserHome({ email }: { email: string }) {
     }
 
     fetchData();
-  }, [email]);
+  }, [privyId]);
 
   if (loading) {
     return <Preloader />;
@@ -38,8 +39,8 @@ export default function UserHome({ email }: { email: string }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <HomeTopRow profiles={profiles} />
-      <HomePosts profiles={profiles} />
+      <HomeTopRow profiles={followerProfiles} />
+      <HomePosts followers={followerProfiles} />
     </div>
   );
 }

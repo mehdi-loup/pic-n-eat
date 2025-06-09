@@ -3,17 +3,25 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const email = searchParams.get('email');
+  const followerId = searchParams.get('followerId');
+  const followeeId = searchParams.get('followeeId');
 
-  if (!email) {
-    return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+  if (!followerId) {
+    return NextResponse.json({ error: 'Follower id is required' }, { status: 400 });
   }
 
   try {
+    const where = followeeId
+      ? {
+          followingProfileEmail: followerId,
+          followedProfileId: followeeId,
+        }
+      : {
+          followingProfileEmail: followerId,
+        };
+
     const follows = await prisma.follower.findMany({
-      where: {
-        followingProfileEmail: email,
-      },
+      where,
     });
     return NextResponse.json(follows);
   } catch (e) {

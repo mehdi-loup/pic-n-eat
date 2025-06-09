@@ -1,36 +1,38 @@
-'use server';
-import { getSessionEmailOrThrow } from '@/actions';
 import LikesInfo from '@/components/LikesInfo';
-import { prisma } from '@/db';
-import type { UserInfo } from '@/types';
+import type { Post, Profile } from '@prisma/client';
 import { Avatar } from '@radix-ui/themes';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Preloader from './Preloader';
 
-export default async function HomePosts({
-  profiles,
+export default function HomePosts({
+  followers,
 }: {
-  profiles: UserInfo[];
+  followers: Profile[];
 }) {
-  const posts = await prisma.post.findMany({
-    where: {
-      author: { in: profiles.map((p) => p.username) },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 100,
-  });
-  const likes = await prisma.like.findMany({
-    where: {
-      author: await getSessionEmailOrThrow(),
-      postId: { in: posts.map((p) => p.id) },
-    },
-  });
+  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const response = await fetch(`/api/posts?authors=${followers.map((p) => p.privyId).join(',')}`);
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPosts();
+  }, [followers]);
 
   return (
     <div className="max-w-md mx-auto flex flex-col gap-12">
-      {posts.map((post) => {
-        const profile = profiles.find((p) => p.username === post.author);
+      {loading ? <Preloader /> : posts.map((post) => {
+        const profile = followers.find((p) => p.privyId === post.author);
         return (
           <div key={post.id} className="">
             <Link href={`/posts/${post.id}`}>
@@ -41,7 +43,7 @@ export default async function HomePosts({
                 <Avatar radius="full" src={profile?.avatar || ''} size="2" fallback="avatar" />
                 <Link
                   className="font-bold text-gray-700 dark:text-gray-300"
-                  href={`/users/${profile?.username}`}
+                  href={`/users/${profile?.id}`}
                 >
                   {profile?.name}
                 </Link>
@@ -50,7 +52,7 @@ export default async function HomePosts({
                 <LikesInfo
                   post={post}
                   showText={false}
-                  sessionLike={likes.find((like) => like.postId === post.id) || null}
+                  sessionLike={null}
                 />
               </div>
             </div>

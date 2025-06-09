@@ -8,9 +8,9 @@ export default function ProfilePageInfo({
   isOurProfile,
   ourFollow,
 }: {
-  profile: Omit<Profile, 'id'>;
+  profile: Profile;
   isOurProfile: boolean;
-  ourFollow: Follower | null;
+  ourFollow: boolean;
 }) {
   return (
     <div>
@@ -36,7 +36,7 @@ export default function ProfilePageInfo({
         <div className="size-48 p-2 rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">
           <div className="size-44 p-2 bg-white dark:bg-black rounded-full">
             <div className="size-40 aspect-square overflow-hidden rounded-full">
-              <img className="" src={profile.avatar || ''} alt="" />
+              <img className="w-full" src={profile.avatar || ''} alt="" />
             </div>
           </div>
         </div>
@@ -48,7 +48,7 @@ export default function ProfilePageInfo({
       </section>
       {!isOurProfile && (
         <section className="flex justify-center my-3">
-          <FollowButton ourFollow={ourFollow} profileIdToFollow={profile.privyId} />
+          <FollowButton ourFollow={ourFollow} profileIdToFollow={profile.id} />
         </section>
       )}
     </div>

@@ -1,5 +1,5 @@
 'use client';
-import type { UserInfo } from '@/types';
+import type { Profile } from '@prisma/client';
 import { Avatar } from '@radix-ui/themes';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 export default function HomeTopRow({
   profiles,
 }: {
-  profiles: UserInfo[];
+  profiles: Profile[];
 }) {
   const router = useRouter();
 

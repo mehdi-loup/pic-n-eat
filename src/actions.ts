@@ -1,5 +1,6 @@
 'use server';
 
+import type { Profile } from '@prisma/client';
 import type { User } from '@privy-io/react-auth';
 import { uniq } from 'lodash';
 import { prisma } from './db';
@@ -15,6 +16,14 @@ export async function getSessionEmailOrThrow(): Promise<string> {
     throw 'not logged in';
   }
   return userEmail;
+}
+
+export async function getProfile(username: string) {
+  const profile: Profile = await prisma.profile.findFirstOrThrow({
+    where: { username: username },
+  });
+
+  return profile;
 }
 
 export async function upsertProfile(newUserInfo: UserInfo, privyId: string) {
@@ -116,10 +125,11 @@ export async function getSinglePostData(postId: string) {
   };
 }
 
-export async function followProfile(profileIdToFollow: string) {
+export async function followProfile(profileIdToFollow: string, user: User) {
   const sessionProfile = await prisma.profile.findFirstOrThrow({
-    where: { privyId: await getSessionEmailOrThrow() },
+    where: { privyId: user.id },
   });
+
   await prisma.follower.create({
     data: {
       followingProfileEmail: sessionProfile.privyId,
@@ -129,13 +139,14 @@ export async function followProfile(profileIdToFollow: string) {
   });
 }
 
-export async function unfollowProfile(profileIdToUnfollow: string) {
+export async function unfollowProfile(profileIdToUnfollow: string, user: User) {
   const sessionProfile = await prisma.profile.findFirstOrThrow({
-    where: { privyId: await getSessionEmailOrThrow() },
+    where: { privyId: user.id },
   });
+
   await prisma.follower.deleteMany({
     where: {
-      followingProfileEmail: profileIdToUnfollow,
+      followedProfileId: profileIdToUnfollow,
       followingProfileId: sessionProfile.id,
     },
   });

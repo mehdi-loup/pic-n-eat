@@ -1,26 +1,26 @@
 'use client';
+import Preloader from '@/components/Preloader';
 import ProfilePageContent from '@/components/ProfilePageContent';
 import { usePrivy } from '@privy-io/react-auth';
-import { useRouter } from 'next/navigation';
 
-export default async function ProfilePage() {
+export default function ProfilePage() {
   const { user } = usePrivy();
-  const router = useRouter();
 
-  if (!user?.farcaster) {
-    return router.push('/settings');
+  if (!user?.farcaster && !user?.twitter) {
+    return <Preloader />;
   }
 
   return (
     <ProfilePageContent
-      ourFollow={null}
+      ourFollow={false}
       profile={{
-        avatar: user.farcaster?.pfp,
+        id: user.id,
+        avatar: user.farcaster?.pfp || user.twitter?.profilePictureUrl || '',
         privyId: user.id,
-        bio: user.farcaster.bio,
-        username: user.farcaster.username,
-        name: user.farcaster.displayName,
-        subtitle: user.farcaster.bio,
+        bio: user.farcaster?.bio || '',
+        username: user.farcaster?.username || user.twitter?.username || '',
+        name: user.farcaster?.displayName || user.twitter?.name || '',
+        subtitle: user.farcaster?.url || user.twitter?.subject || '',
       }}
       isOurProfile={true}
     />
