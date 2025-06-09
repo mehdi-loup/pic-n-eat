@@ -7,10 +7,10 @@ export default function DesktopNav() {
       <div className="top-4 sticky">
         <img
           className="dark:invert"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/800px-Instagram_logo.svg.png"
+          src="logo.png"
           alt=""
         />
-        <div className="ml-1 inline-flex flex-col gap-6 mt-8 *:flex *:items-center *:gap-2">
+        <div className="ml-1 inline-flex flex-col gap-6 mt-4 *:flex *:items-center *:gap-2">
           <Link href={'/'}>
             <HomeIcon />
             Home
