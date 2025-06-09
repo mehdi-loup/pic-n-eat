@@ -1,3 +1,4 @@
+'use server';
 import PostsGrid from '@/components/PostsGrid';
 import { prisma } from '@/db';
 

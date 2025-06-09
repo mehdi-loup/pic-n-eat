@@ -1,3 +1,4 @@
+'use server';
 import { getSessionEmailOrThrow } from '@/actions';
 import LikesInfo from '@/components/LikesInfo';
 import { prisma } from '@/db';
