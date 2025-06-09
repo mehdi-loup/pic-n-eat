@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id       String  @id @default(uuid())
+  privyId  String  @unique
+  avatar   String?
+  username String?
+  name     String?
+  subtitle String?
+  bio      String?
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  author      String
+  image       String
+  description String
+  likesCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String
+  author    String
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  postId    String
+  author    String
+  createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  postId    String
+  author    String
+  createdAt DateTime @default(now())
+}
+
+model Follower {
+  id                    String   @id @default(uuid())
+  followingProfileEmail String
+  followingProfileId    String
+  followedProfileId     String
+  createdAt             DateTime @default(now())
+}
