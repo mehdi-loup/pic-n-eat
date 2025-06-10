@@ -6,7 +6,7 @@ import { Theme } from '@radix-ui/themes';
 import localFont from 'next/font/local';
 import '../globals.css';
 import '@radix-ui/themes/styles.css';
-import { type PrivyClientConfig, PrivyProvider } from '@privy-io/react-auth';
+import Providers from '../providers';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -18,14 +18,6 @@ const geistMono = localFont({
   variable: '--font-geist-mono',
   weight: '100 900',
 });
-
-const config: PrivyClientConfig = {
-  embeddedWallets: {
-    ethereum: {
-      createOnLogin: 'users-without-wallets',
-    },
-  },
-};
 
 export default function RootLayout({
   children,
@@ -45,13 +37,9 @@ export default function RootLayout({
             <DesktopNav />
             <div className="pb-24 ld:pb-4 pt-4 px-4 lg:px-8 flex justify-around w-full">
               <div className="w-full">
-                <PrivyProvider
-                  appId="cmbp3dj6t0098l70nklpgx4i2"
-                  clientId="client-WY6MC3d5SKAJj82fBQtzhKXRW9nqFuGL9A4v8H6W7DME9"
-                  config={config}
-                >
+                <Providers>
                   {children}
-                </PrivyProvider>
+                </Providers>
               </div>
             </div>
           </div>

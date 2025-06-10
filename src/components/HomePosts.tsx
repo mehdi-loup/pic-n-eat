@@ -1,6 +1,7 @@
 'use client';
 import LikesInfo from '@/components/LikesInfo';
-import type { Post, Profile } from '@prisma/client';
+import type { Like, Post, Profile } from '@prisma/client';
+import { usePrivy } from '@privy-io/react-auth';
 import { Avatar } from '@radix-ui/themes';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -11,20 +12,25 @@ export default function HomePosts({
 }: {
   followers: Profile[];
 }) {
+  const { user } = usePrivy();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [likes, setLikes] = useState<Like[]>([]);
 
   useEffect(() => {
     async function fetchPosts() {
+      if (user) {
+        const response = await fetch(`/api/likes?authors=${user.id}`).then(r => r.json());
+        setLikes(response)
+      }
       if (followers.length === 0) {
         setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`/api/posts?authors=${followers.map((p) => p.privyId).join(',')}`);
-        const data = await response.json();
-        setPosts(data);
+        const response = await fetch(`/api/posts?authors=${followers.map((p) => p.privyId).join(',')}`).then(r => r.json());
+        setPosts(response);
       } catch (error) {
         console.error('Error fetching posts:', error);
       } finally {
@@ -33,12 +39,13 @@ export default function HomePosts({
     }
 
     fetchPosts();
-  }, [followers]);
+  }, [followers, user]);
 
   return (
     <div className="max-w-md mx-auto flex flex-col gap-12">
       {loading ? <Preloader /> : posts.length === 0 ? 'No post yet' : posts.map((post) => {
         const profile = followers.find((p) => p.privyId === post.author);
+        const isLiked = likes.some(({ postId }) => postId === post.id)
         return (
           <div key={post.id} className="">
             <Link href={`/posts/${post.id}`}>
@@ -58,7 +65,7 @@ export default function HomePosts({
                 <LikesInfo
                   post={post}
                   showText={false}
-                  sessionLike={null}
+                  sessionLike={isLiked}
                 />
               </div>
             </div>

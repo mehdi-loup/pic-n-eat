@@ -1,6 +1,7 @@
 'use client';
 import { likePost, removeLikeFromPost } from '@/actions';
 import type { Like, Post } from '@prisma/client';
+import { usePrivy } from '@privy-io/react-auth';
 import { HeartIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -11,21 +12,23 @@ export default function LikesInfo({
   showText = true,
 }: {
   post: Post;
-  sessionLike: Like | null;
+  sessionLike: boolean;
   showText?: boolean;
 }) {
   const router = useRouter();
+  const { user } = usePrivy()
   const [likedByMe, setLikedByMe] = useState(!!sessionLike);
   return (
     <form
       action={async (data: FormData) => {
+        if (!user) throw new Error('No connected user')
         setLikedByMe((prev) => !prev);
         if (likedByMe) {
           // remove like
-          await removeLikeFromPost(data);
+          await removeLikeFromPost(data, user);
         } else {
           // add like
-          await likePost(data);
+          await likePost(data, user);
         }
         router.refresh();
       }}

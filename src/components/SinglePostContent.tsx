@@ -5,19 +5,21 @@ import SessionCommentForm from '@/components/SessionCommentForm';
 import type { Comment as CommentModel, Like, Post, Profile } from '@prisma/client';
 import { Suspense } from 'react';
 
+export interface Props {
+  post: Post;
+  authorProfile: Profile;
+  comments: CommentModel[];
+  commentsAuthors: Profile[];
+  myLike: Like | null;
+}
+
 export default function SinglePostContent({
   post,
   authorProfile,
   comments,
   commentsAuthors,
   myLike,
-}: {
-  post: Post;
-  authorProfile: Profile;
-  comments: CommentModel[];
-  commentsAuthors: Profile[];
-  myLike: Like | null;
-}) {
+}: Props) {
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-4">

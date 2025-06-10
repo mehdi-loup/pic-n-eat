@@ -6,18 +6,6 @@ import { uniq } from 'lodash';
 import { prisma } from './db';
 import type { UserInfo } from './types';
 
-export async function getSessionEmail(): Promise<string | null | undefined> {
-  return 'mouloud@gmail.com';
-}
-
-export async function getSessionEmailOrThrow(): Promise<string> {
-  const userEmail = await getSessionEmail();
-  if (!userEmail) {
-    throw 'not logged in';
-  }
-  return userEmail;
-}
-
 export async function getProfile(username: string) {
   const profile: Profile = await prisma.profile.findFirstOrThrow({
     where: { username: username },
@@ -40,7 +28,7 @@ export async function upsertProfile(newUserInfo: UserInfo, privyId: string) {
 }
 
 export async function postEntry(data: FormData, user: User) {
-  const sessionEmail = user.email?.address || user.id;
+  const sessionEmail = user.id;
   const postDoc = await prisma.post.create({
     data: {
       author: sessionEmail,
@@ -51,8 +39,8 @@ export async function postEntry(data: FormData, user: User) {
   return postDoc.id;
 }
 
-export async function postComment(data: FormData) {
-  const authorEmail = await getSessionEmailOrThrow();
+export async function postComment(data: FormData, connectedUser: User) {
+  const authorEmail = connectedUser.id;
   return prisma.comment.create({
     data: {
       author: authorEmail,
@@ -71,29 +59,29 @@ async function updatePostLikesCount(postId: string) {
   });
 }
 
-export async function likePost(data: FormData) {
+export async function likePost(data: FormData, connectedUser: User) {
   const postId = data.get('postId') as string;
   await prisma.like.create({
     data: {
-      author: await getSessionEmailOrThrow(),
+      author: connectedUser.id,
       postId,
     },
   });
   await updatePostLikesCount(postId);
 }
 
-export async function removeLikeFromPost(data: FormData) {
+export async function removeLikeFromPost(data: FormData, connectedUser: User) {
   const postId = data.get('postId') as string;
   await prisma.like.deleteMany({
     where: {
       postId,
-      author: await getSessionEmailOrThrow(),
+      author: connectedUser.id,
     },
   });
   await updatePostLikesCount(postId);
 }
 
-export async function getSinglePostData(postId: string) {
+export async function getSinglePostData(postId: string, connectedUser: User) {
   const post = await prisma.post.findFirstOrThrow({ where: { id: postId } });
   const authorProfile = await prisma.profile.findFirstOrThrow({ where: { privyId: post.author } });
   const comments = await prisma.comment.findMany({ where: { postId: post.id } });
@@ -102,26 +90,20 @@ export async function getSinglePostData(postId: string) {
       privyId: { in: uniq(comments.map((c) => c.author)) },
     },
   });
-  const sessionEmail = await getSessionEmailOrThrow();
+
   const myLike = await prisma.like.findFirst({
     where: {
-      author: sessionEmail,
+      author: connectedUser.id,
       postId: post.id,
     },
   });
-  const myBookmark = await prisma.bookmark.findFirst({
-    where: {
-      author: sessionEmail,
-      postId: post.id,
-    },
-  });
+
   return {
     post,
     authorProfile,
     comments,
     commentsAuthors,
     myLike,
-    myBookmark,
   };
 }
 
@@ -148,26 +130,6 @@ export async function unfollowProfile(profileIdToUnfollow: string, user: User) {
     where: {
       followedProfileId: profileIdToUnfollow,
       followingProfileId: sessionProfile.id,
-    },
-  });
-}
-
-export async function bookmarkPost(postId: string) {
-  const sessionEmail = await getSessionEmailOrThrow();
-  await prisma.bookmark.create({
-    data: {
-      author: sessionEmail,
-      postId,
-    },
-  });
-}
-
-export async function unbookmarkPost(postId: string) {
-  const sessionEmail = await getSessionEmailOrThrow();
-  await prisma.bookmark.deleteMany({
-    where: {
-      author: sessionEmail,
-      postId,
     },
   });
 }
