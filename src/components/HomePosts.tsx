@@ -16,7 +16,7 @@ export default function HomePosts({
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await fetch(`/api/posts?authors=${followers.map((p) => p.privyId).join(',')}`);
+        const response = await fetch(`/api/posts?authors=${followers?.map((p) => p.privyId).join(',')}`);
         const data = await response.json();
         setPosts(data);
       } catch (error) {
