@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
@@ -9,52 +9,89 @@ datasource db {
 }
 
 model Profile {
-  id       String  @id @default(uuid())
-  privyId  String  @unique
+  id       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  privyId  String  @unique(map: "Profile_email_key") @db.VarChar(255)
   avatar   String?
-  username String?
-  name     String?
+  username String? @db.VarChar(255)
+  name     String? @db.VarChar(255)
   subtitle String?
   bio      String?
+
+  @@index([privyId], map: "idx_profile_email")
 }
 
 model Post {
-  id          String   @id @default(uuid())
-  author      String
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  author      String    @db.VarChar(255)
   image       String
   description String
-  likesCount  Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  likesCount  Int?      @default(0)
+  rating      Int?      @default(0)
+  createdAt   DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  location    Location? @relation(fields: [locationId], references: [id])
+  locationId  String?   @db.Uuid
+
+  @@index([author], map: "idx_post_author")
+  @@index([createdAt], map: "idx_post_created_at")
+  @@index([locationId], map: "idx_post_location")
+}
+
+model Location {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name          String    @db.VarChar(255)
+  googlePlaceId String    @unique @db.VarChar(255)
+  address       String    @db.VarChar(255)
+  latitude      Decimal   @db.Decimal(10, 8)
+  longitude     Decimal   @db.Decimal(11, 8)
+  createdAt     DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  posts         Post[]
+
+  @@index([googlePlaceId], map: "idx_location_place_id")
+  @@index([latitude, longitude], map: "idx_location_coordinates")
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  postId    String
-  author    String
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  postId    String    @db.Uuid
+  author    String    @db.VarChar(255)
   text      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([author], map: "idx_comment_author")
+  @@index([postId], map: "idx_comment_post_id")
 }
 
 model Like {
-  id        String   @id @default(uuid())
-  postId    String
-  author    String
-  createdAt DateTime @default(now())
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  postId    String    @db.Uuid
+  author    String    @db.VarChar(255)
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([author], map: "idx_like_author")
+  @@index([postId], map: "idx_like_post_id")
 }
 
 model Bookmark {
-  id        String   @id @default(uuid())
-  postId    String
-  author    String
-  createdAt DateTime @default(now())
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  postId    String    @db.Uuid
+  author    String    @db.VarChar(255)
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([author], map: "idx_bookmark_author")
+  @@index([postId], map: "idx_bookmark_post_id")
 }
 
 model Follower {
-  id                    String   @id @default(uuid())
-  followingProfileEmail String
-  followingProfileId    String
-  followedProfileId     String
-  createdAt             DateTime @default(now())
+  id                    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  followingProfileEmail String    @db.VarChar(255)
+  followingProfileId    String    @db.Uuid
+  followedProfileId     String    @db.Uuid
+  createdAt             DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@unique([followingProfileId, followedProfileId], map: "constraint_1")
+  @@index([followedProfileId], map: "idx_follower_followed_id")
+  @@index([followingProfileId], map: "idx_follower_following_id")
 }

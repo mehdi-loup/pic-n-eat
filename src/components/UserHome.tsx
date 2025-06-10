@@ -6,7 +6,7 @@ import HomePosts from './HomePosts';
 import Preloader from './Preloader';
 
 export default function UserHome({ privyId }: { privyId: string }) {
-  const { data: topUsers = [] } = useQuery({
+  const { data: topUsers = [], isLoading: usersLoading } = useQuery({
     queryKey: ['profiles'],
     queryFn: async () => {
       const response = await fetch('/api/profiles');
@@ -15,7 +15,7 @@ export default function UserHome({ privyId }: { privyId: string }) {
     },
   });
 
-  const { data: follows = [] } = useQuery({
+  const { data: follows = [], isLoading: followsLoading } = useQuery({
     queryKey: ['follows', privyId],
     queryFn: async () => {
       const response = await fetch(`/api/follows?followerId=${privyId}`);
@@ -25,7 +25,7 @@ export default function UserHome({ privyId }: { privyId: string }) {
     enabled: !!privyId,
   });
 
-  const { data: followerProfiles = [] } = useQuery({
+  const { data: followerProfiles = [], isLoading: followersLoading } = useQuery({
     queryKey: ['profiles', follows.map(f => f.followedProfileId)],
     queryFn: async () => {
       if (follows.length === 0) return [];
@@ -38,7 +38,7 @@ export default function UserHome({ privyId }: { privyId: string }) {
 
   const filteredTopUsers = topUsers.filter((u) => u.privyId !== privyId);
 
-  if (!topUsers || !followerProfiles) {
+  if (usersLoading || followersLoading || followsLoading) {
     return <Preloader />;
   }
 
