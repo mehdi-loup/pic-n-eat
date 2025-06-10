@@ -1,6 +1,5 @@
 'use client';
 import HomeTopRow from '@/components/HomeTopRow';
-import type { UserInfo } from '@/types';
 import type { Profile } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import HomePosts from './HomePosts';
@@ -45,7 +44,7 @@ export default function UserHome({ privyId }: { privyId: string }) {
   return (
     <div className="flex flex-col gap-8">
       <HomeTopRow profiles={topUsers} />
-      <HomePosts followers={followerProfiles} />
+      {followerProfiles ? <HomePosts followers={followerProfiles} /> : <Preloader />}
     </div>
   );
 }

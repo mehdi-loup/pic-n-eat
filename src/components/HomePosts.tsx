@@ -1,3 +1,4 @@
+'use client';
 import LikesInfo from '@/components/LikesInfo';
 import type { Post, Profile } from '@prisma/client';
 import { Avatar } from '@radix-ui/themes';
@@ -15,8 +16,13 @@ export default function HomePosts({
 
   useEffect(() => {
     async function fetchPosts() {
+      if (followers.length === 0) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(`/api/posts?authors=${followers?.map((p) => p.privyId).join(',')}`);
+        const response = await fetch(`/api/posts?authors=${followers.map((p) => p.privyId).join(',')}`);
         const data = await response.json();
         setPosts(data);
       } catch (error) {
