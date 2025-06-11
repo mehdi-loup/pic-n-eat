@@ -8,6 +8,7 @@ export default function Modal({ children }: { children: ReactNode }) {
   return (
     <div
       onClick={() => router.back()}
+      onKeyDown={() => { }}
       className="bg-black/80 dark:bg-gray-700/70 fixed inset-0 z-20"
     >
       <div className="left-8 right-8 top-9 bottom-9 absolute flex items-center">
@@ -16,7 +17,7 @@ export default function Modal({ children }: { children: ReactNode }) {
           className="bg-white py-4 dark:bg-gray-800 rounded-lg overflow-y-auto"
         >
           <div className="z-30 rounded-lg  ">
-            <div onClick={(ev) => ev.stopPropagation()} className="px-4 ">
+            <div onClick={(ev) => ev.stopPropagation()} onKeyDown={() => { }} className="px-4 ">
               {children}
             </div>
           </div>

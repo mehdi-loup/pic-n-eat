@@ -13,7 +13,7 @@ export default async function ModalPostContent({ postId, user }: { postId: strin
       authorProfile={authorProfile}
       comments={comments}
       commentsAuthors={commentsAuthors}
-      myLike={myLike}
+      myLike={Boolean(myLike)}
     />
   );
 }

@@ -7,7 +7,7 @@ import type { Comment as CommentModel, Like, Location, Post, Profile } from '@pr
 import { Suspense } from 'react';
 
 export interface Props {
-  post: Post & { location: Location };
+  post: Post & { location: Location | null };
   authorProfile: Profile;
   comments: CommentModel[];
   commentsAuthors: Profile[];
@@ -27,7 +27,7 @@ export default function SinglePostContent({
         <div>
           <img className="rounded-md" src={post.image} alt={post.description} />
 
-          {post.location.address ? (
+          {post.location?.address ? (
             <div className="mt-2 flex justify-center">
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${post.location.latitude},${post.location.longitude}`}
