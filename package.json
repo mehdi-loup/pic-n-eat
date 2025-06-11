@@ -27,6 +27,7 @@
     "prisma": "6.9.0  ",
     "react": "^18",
     "react-dom": "^18",
+    "react-google-autocomplete": "^2.7.5",
     "react-masonry-css": "^1.0.16",
     "react-preloaders": "^3.0.3",
     "react-spinners": "^0.14.1",

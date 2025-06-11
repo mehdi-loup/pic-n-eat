@@ -26,11 +26,11 @@ model Post {
   image       String
   description String
   likesCount  Int?      @default(0)
-  rating      Int?      @default(0)
   createdAt   DateTime? @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
-  location    Location? @relation(fields: [locationId], references: [id])
   locationId  String?   @db.Uuid
+  rating      Int?      @default(0)
+  location    Location? @relation(fields: [locationId], references: [id])
 
   @@index([author], map: "idx_post_author")
   @@index([createdAt], map: "idx_post_created_at")
@@ -39,7 +39,6 @@ model Post {
 
 model Location {
   id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name          String    @db.VarChar(255)
   googlePlaceId String    @unique @db.VarChar(255)
   address       String    @db.VarChar(255)
   latitude      Decimal   @db.Decimal(10, 8)
