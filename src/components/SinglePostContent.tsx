@@ -30,7 +30,7 @@ export default function SinglePostContent({
           {post.location?.address ? (
             <div className="mt-2 flex justify-center">
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${post.location.latitude},${post.location.longitude}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${post.location.latitude.toString()},${post.location.longitude.toString()}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline text-md"
@@ -38,23 +38,26 @@ export default function SinglePostContent({
                 {post.location.address}
               </a>
             </div>
-          ) : null
-          }
+          ) : null}
         </div>
         <div>
-          {post.createdAt ? <Comment
-            createdAt={post.createdAt}
-            text={post.description}
-            authorProfile={authorProfile}
-          /> : null}
+          {post.createdAt ? (
+            <Comment
+              createdAt={post.createdAt}
+              text={post.description}
+              authorProfile={authorProfile}
+            />
+          ) : null}
           <div className="pt-4 flex flex-col gap-4">
             {comments.map((comment) => (
               <div key={comment.id}>
-                {comment.createdAt ? <Comment
-                  createdAt={comment.createdAt}
-                  text={comment.text}
-                  authorProfile={commentsAuthors.find((a) => a.privyId === comment.author)}
-                /> : null}
+                {comment.createdAt ? (
+                  <Comment
+                    createdAt={comment.createdAt}
+                    text={comment.text}
+                    authorProfile={commentsAuthors.find((a) => a.privyId === comment.author)}
+                  />
+                ) : null}
               </div>
             ))}
           </div>

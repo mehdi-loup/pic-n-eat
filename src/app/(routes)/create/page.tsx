@@ -4,13 +4,13 @@ import PostRating from '@/components/PostRating';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button, TextArea } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
-import { CloudUploadIcon, SendIcon } from 'lucide-react';
+import { DollarSign, MapPin, SendIcon, Star, Type } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
-import Autocomplete from 'react-google-autocomplete'
+import { useState } from 'react';
+import Autocomplete from 'react-google-autocomplete';
+import CameraAccess from './components/CameraAccess';
 
 export default function CreatePage() {
-  const fileInRef = useRef<HTMLInputElement>(null);
   const { user } = usePrivy();
   const router = useRouter();
   const [rating, setRating] = useState(0);
@@ -20,8 +20,9 @@ export default function CreatePage() {
     latitude: number;
     longitude: number;
   } | null>(null);
+  const [priceRange, setPriceRange] = useState<string | null>(null);
 
-  const { mutate: uploadImage, isPending: isUploading, data: imageUrl } = useMutation({
+  const { mutate: uploadImage, data: imageUrl } = useMutation({
     mutationFn: async (file: File) => {
       const data = new FormData();
       data.set('file', file);
@@ -42,6 +43,7 @@ export default function CreatePage() {
     <form
       className="max-w-md mx-auto"
       action={async (data) => {
+        console.log('imageUrl', imageUrl, 'rating', rating, 'location', location);
         if (!imageUrl || !rating || !location) {
           return;
         }
@@ -53,54 +55,100 @@ export default function CreatePage() {
       <input type="hidden" name="image" value={imageUrl || ''} />
       <input type="hidden" name="location" value={location ? JSON.stringify(location) : ''} />
       <input type="hidden" name="rating" value={rating} />
+      <input type="hidden" name="priceRange" value={priceRange || ''} />
       <div className="flex flex-col gap-4">
-        <div>
-          <div className="min-h-64 p-2 bg-gray-400 rounded-md relative">
-            {imageUrl && <img src={imageUrl} className="rounded-md" alt="" />}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <input
-                onChange={(ev) => {
-                  const file = ev.target.files?.[0];
-                  if (file) {
-                    uploadImage(file);
-                  }
-                }}
-                className="hidden"
-                type="file"
-                ref={fileInRef}
-              />
-              <Button
-                disabled={isUploading}
-                onClick={() => fileInRef?.current?.click()}
-                type="button"
-                variant="surface"
-              >
-                {!isUploading && <CloudUploadIcon size={16} />}
-                {isUploading ? 'Uploading...' : 'Choose image'}
-              </Button>
-            </div>
+        <div className="min-h-64 bg-gray-400 rounded-md relative">
+          {imageUrl ? (
+            <img src={imageUrl} className="rounded-md" alt="" />
+          ) : (
+            <CameraAccess onImageCapture={uploadImage} />
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="location" className="text-sm font-bold mb-2 flex items-center">
+            <MapPin size={16} className="mr-2 text-orange-500" /> Location{' '}
+            <span className="text-orange-500">*</span>
+          </label>
+          <div className="relative flex items-center">
+            <Autocomplete
+              apiKey={process.env.GOOGLE_API_KEY}
+              onPlaceSelected={(place) => {
+                setLocation({
+                  address: place.formatted_address ?? place.vicinity,
+                  latitude: place.geometry.location.lat(),
+                  longitude: place.geometry.location.lng(),
+                  googlePlaceId: place.place_id,
+                });
+              }}
+              className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pr-10 text-slate-600"
+              placeholder="Search restaurants or type location"
+            />
+            <button
+              type="button"
+              className="absolute right-0 top-0 mt-2 mr-2 text-orange-500 font-semibold flex items-center"
+            >
+              <SendIcon size={16} className="mr-1" /> Nearby
+            </button>
           </div>
         </div>
-        <PostRating onRatingChange={setRating} />
-        <div className="flex flex-col gap-2">
-          <TextArea name="description" className="h-16" placeholder="Add photo description..." />
+
+        <div className="mb-4">
+          <label htmlFor="rating" className="text-sm font-bold mb-2 flex items-center">
+            <Star size={16} className="mr-2 text-orange-500" /> Rating{' '}
+            <span className="text-orange-500">*</span>
+          </label>
+          <PostRating onRatingChange={setRating} />
         </div>
-        <Autocomplete
-          apiKey={process.env.GOOGLE_API_KEY}
-          onPlaceSelected={(place) => {
-            setLocation({
-              address: place.formatted_address ?? place.vicinity,
-              latitude: place.geometry.location.lat(),
-              longitude: place.geometry.location.lng(),
-              googlePlaceId: place.place_id
-            });
-          }}
-        />
+
+        <div className="mb-4">
+          <label htmlFor="price-range" className="text-sm font-bold mb-2 flex items-center">
+            <DollarSign size={16} className="mr-2 text-orange-500" /> Price Range
+          </label>
+          <div className="flex space-x-2">
+            {['$', '$$', '$$$', '$$$$'].map((price) => (
+              <button
+                key={price}
+                type="button"
+                onClick={() => setPriceRange(price)}
+                className={`py-2 px-4 rounded-md border ${priceRange === price ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-100 border-gray-300 text-slate-600'}`}
+              >
+                {price}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="caption" className="text-sm font-bold mb-2 flex items-center">
+            <Type size={16} className="mr-2 text-orange-500" /> Caption
+          </label>
+          <TextArea
+            name="description"
+            className="h-32 w-full p-2 border rounded-md resize-none text-slate-600"
+            placeholder="Share your experience..."
+          />
+        </div>
       </div>
       <div className="flex mt-4 justify-center">
-        <Button disabled={!imageUrl || !rating || !location}>
-          <SendIcon size={16} />
-          Publish
+        <Button
+          className="button"
+          type="submit"
+          disabled={!imageUrl || !rating || !location}
+          style={{
+            backgroundColor: '#FF6F2C',
+            color: '#FFFFFF',
+            padding: '15px 30px',
+            borderRadius: '8px',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0px 4px 10px rgba(255, 111, 44, 0.3)',
+          }}
+        >
+          <SendIcon size={16} className="mr-2" />
+          Publish Post
         </Button>
       </div>
     </form>
