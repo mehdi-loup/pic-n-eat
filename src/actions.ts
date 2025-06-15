@@ -48,6 +48,7 @@ export async function postEntry(data: FormData, user: User) {
       description: (data.get('description') as string) || '',
       locationId: location.id,
       rating: Number(data.get('rating')),
+      price: Number(data.get('price')),
     },
   });
 

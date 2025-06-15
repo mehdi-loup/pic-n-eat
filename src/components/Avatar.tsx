@@ -5,7 +5,7 @@ export default function Avatar({
 }) {
   return (
     <div className="size-16 aspect-square overflow-hidden rounded-full">
-      <img src={src} alt="" />
+      <img src={src} className="min-w-full" alt="" />
     </div>
   );
 }

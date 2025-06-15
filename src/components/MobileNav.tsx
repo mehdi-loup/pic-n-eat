@@ -14,7 +14,7 @@ export default function MobileNav() {
           </Link>
         </div>
         <div className="size-14 relative -top-4 justify-center w-[140px]">
-          <div className="absolute bg-blue-500 bg-clip-text border-white dark:border-gray-700 border-t-transparent dark:border-t-transparent border-l-transparent dark:border-l-transparent border-[50px]  rounded-full rotate-45">
+          <div className="absolute bg-blue-500 bg-clip-text border-white dark:border-gray-700 border-t-transparent dark:border-t-transparent border-l-transparent dark:border-l-transparent border-[25px]  rounded-full rotate-45">
             <div className="border-4 size-15 border-transparent">
               <Link
                 href="/create"

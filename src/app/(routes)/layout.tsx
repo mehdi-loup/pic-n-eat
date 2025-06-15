@@ -21,28 +21,26 @@ const geistMono = localFont({
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <head>
-        <script type="text/javascript" src={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}&libraries=places`} />
+        <script
+          type="text/javascript"
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&libraries=places`}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-black dark:text-red-500`}
       >
         <Theme>
-          {modal}
           <div className="flex min-h-screen dark:bg-gray-800 dark:text-gray-300">
             <DesktopNav />
             <div className="pb-24 ld:pb-4 pt-4 px-4 lg:px-8 flex justify-around w-full">
               <div className="w-full">
-                <Providers>
-                  {children}
-                </Providers>
+                <Providers>{children}</Providers>
               </div>
             </div>
           </div>

@@ -30,6 +30,7 @@ model Post {
   updatedAt   DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
   locationId  String?   @db.Uuid
   rating      Int?      @default(0)
+  price       Int?      @default(0)
   location    Location? @relation(fields: [locationId], references: [id])
 
   @@index([author], map: "idx_post_author")

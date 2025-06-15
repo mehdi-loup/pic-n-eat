@@ -5,9 +5,13 @@
   .text-balance {
     text-wrap: balance;
   }
+  .text-dollar {
+    color: var(--dollar);
+  }
 }
 
 :root {
   --red: rgb(207, 33, 66);
   --orange: rgb(230, 173, 77);
+  --dollar: rgb(5, 150, 105);
 }
