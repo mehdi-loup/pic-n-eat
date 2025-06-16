@@ -1,7 +1,12 @@
+'use client';
+
 import FollowButton from '@/components/FollowButton';
-import type { Follower, Profile } from '@prisma/client';
+import type { Profile } from '@prisma/client';
+import { usePrivy } from '@privy-io/react-auth';
+import { Button } from '@radix-ui/themes';
 import { CheckIcon, ChevronLeft, CogIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePageInfo({
   profile,
@@ -12,10 +17,13 @@ export default function ProfilePageInfo({
   isOurProfile: boolean;
   ourFollow: boolean;
 }) {
+  const { logout } = usePrivy();
+  const router = useRouter();
+
   return (
     <div>
       <section className="flex justify-between items-center">
-        <button type="button">
+        <button type="button" onClick={router.back}>
           <ChevronLeft />
         </button>
         <div className="font-bold flex items-center gap-2">
@@ -24,13 +32,19 @@ export default function ProfilePageInfo({
             <CheckIcon size={16} />
           </div>
         </div>
-        <div>
-          {isOurProfile && (
-            <Link href="/settings">
-              <CogIcon />
-            </Link>
-          )}
-        </div>
+        {isOurProfile ? (
+          <Button
+            variant="ghost"
+            onClick={async () => {
+              await logout();
+              router.push('/');
+            }}
+          >
+            Logout
+          </Button>
+        ) : (
+          <span />
+        )}
       </section>
       <section className="mt-8 flex justify-center">
         <div className="size-48 p-2 rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">

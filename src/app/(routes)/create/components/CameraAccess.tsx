@@ -1,4 +1,4 @@
-import { Camera } from 'lucide-react';
+import { Camera, File as FileIcon } from 'lucide-react';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -7,6 +7,7 @@ interface CameraAccessProps {
 }
 
 const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
+  const fileInRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -171,25 +172,28 @@ const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
       }}
     >
       <video ref={videoRef} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
-      <button
-        onClick={takePhoto}
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          backgroundColor: '#FF6F2C',
-          color: '#FFFFFF',
-          padding: '15px 30px',
-          borderRadius: '8px',
-          fontSize: '18px',
-          fontWeight: 'bold',
-          border: 'none',
-          cursor: 'pointer',
-          boxShadow: '0px 4px 10px rgba(255, 111, 44, 0.3)',
-        }}
-        type="button"
-      >
-        Take Photo
-      </button>
+      <input
+        onChange={(ev) => (ev.target.files?.length ? onImageCapture(ev.target.files[0]) : null)}
+        className="hidden"
+        type="file"
+        ref={fileInRef}
+      />
+      <div className="absolute flex items-center bottom-20 bg-gradient-to-tr from-ig-orange to-ig-red to-80% rounded-md">
+        <button
+          onClick={takePhoto}
+          className="px-4 py-2  text-lg border-r-[1px] border-gray-300 cursor-pointer text-white"
+          type="button"
+        >
+          Take Photo
+        </button>
+        <button
+          className="px-4 py-2 text-lg  cursor-pointer text-white"
+          onClick={() => fileInRef?.current?.click()}
+          type="button"
+        >
+          <FileIcon size={16} />
+        </button>
+      </div>
     </div>
   );
 };

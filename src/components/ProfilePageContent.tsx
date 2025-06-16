@@ -13,7 +13,7 @@ export default function ProfilePageContent({
   ourFollow: boolean;
 }) {
   return (
-    <main>
+    <main className='w-full h-full'>
       <ProfilePageInfo profile={profile} isOurProfile={isOurProfile} ourFollow={ourFollow} />
       <section className="mt-4">
         <ProfilePosts privyId={profile.privyId} />

@@ -42,7 +42,7 @@ export default function HomePosts({
   }, [followers, user]);
 
   return (
-    <div className="max-w-md mx-auto flex flex-col gap-12">
+    <div className="min-h-[calc(100vh-120px)] max-w-md mx-auto mt-32 flex flex-col gap-12">
       {loading ? <Preloader /> : posts.length === 0 ? 'No post yet' : posts.map((post) => {
         const profile = followers.find((p) => p.privyId === post.author);
         const isLiked = likes.some(({ postId }) => postId === post.id)

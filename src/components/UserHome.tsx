@@ -43,7 +43,7 @@ export default function UserHome({ privyId }: { privyId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="relative w-full flex flex-col">
       <HomeTopRow profiles={filteredTopUsers} />
       {followerProfiles ? <HomePosts followers={followerProfiles} /> : <Preloader />}
     </div>

@@ -30,6 +30,7 @@ export default function RootLayout({
         <script
           type="text/javascript"
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&libraries=places`}
+          async
         />
       </head>
       <body
@@ -39,7 +40,7 @@ export default function RootLayout({
           <div className="flex min-h-screen dark:bg-gray-800 dark:text-gray-300">
             <DesktopNav />
             <div className="pb-24 ld:pb-4 pt-4 px-4 lg:px-8 flex justify-around w-full">
-              <div className="w-full">
+              <div className="w-full content-center justify-items-center">
                 <Providers>{children}</Providers>
               </div>
             </div>

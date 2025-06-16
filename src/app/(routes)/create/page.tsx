@@ -2,7 +2,7 @@
 import { postEntry } from '@/actions';
 import PostRating from '@/components/PostRating';
 import { usePrivy } from '@privy-io/react-auth';
-import { Button, TextArea } from '@radix-ui/themes';
+import { TextArea } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 import { DollarSign, LoaderIcon, MapPin, SendIcon, Star, Type } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -40,7 +40,11 @@ export default function CreatePage() {
   const isFormValid = imageUrl && rating && location;
 
   if (!user) {
-    return router.push('/settings');
+    return router.push('/');
+  }
+
+  if (!imageUrl) {
+    return <CameraAccess onImageCapture={uploadImage} />;
   }
 
   return (
@@ -64,11 +68,7 @@ export default function CreatePage() {
       <input type="hidden" name="priceRange" value={priceRange || 0} />
       <div className="flex flex-col gap-4">
         <div className="min-h-64 bg-gray-400 rounded-md relative">
-          {imageUrl ? (
-            <img src={imageUrl} className="rounded-md" alt="" />
-          ) : (
-            <CameraAccess onImageCapture={uploadImage} />
-          )}
+          <img src={imageUrl} className="rounded-md" alt="" />
         </div>
 
         <div className="mb-4">
