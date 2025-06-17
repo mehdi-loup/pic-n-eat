@@ -65,7 +65,7 @@ export default function CreatePage() {
       <input type="hidden" name="image" value={imageUrl || ''} />
       <input type="hidden" name="location" value={location ? JSON.stringify(location) : ''} />
       <input type="hidden" name="rating" value={rating} />
-      <input type="hidden" name="priceRange" value={priceRange || 0} />
+      <input type="hidden" name="price" value={priceRange || 0} />
       <div className="flex flex-col gap-4">
         <div className="min-h-64 bg-gray-400 rounded-md relative">
           <img src={imageUrl} className="rounded-md" alt="" />
@@ -157,7 +157,7 @@ export default function CreatePage() {
             <DollarSign size={16} className="mr-2 text-orange-500" /> Price Range
           </label>
           <div className="flex space-x-2">
-            {['$', '$$', '$$$', '$$$$'].map((price) => (
+            {['$', '$$', '$$$', '$$$$', '$$$$$'].map((price) => (
               <button
                 key={price}
                 type="button"

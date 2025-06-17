@@ -1,3 +1,4 @@
+import { useGetNumberOfCameras } from '@/hooks/useGetCameras';
 import { Camera, File as FileIcon, RefreshCw } from 'lucide-react';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -11,7 +12,8 @@ const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment');
+  const numberOfCameras = useGetNumberOfCameras();
 
   const startCamera = useCallback(async () => {
     try {
@@ -178,23 +180,26 @@ const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
         className="hidden"
         type="file"
         ref={fileInRef}
+        accept="image/*"
       />
       <div className="absolute flex items-center bottom-20 bg-gradient-to-tr from-ig-orange to-ig-red to-80% rounded-md">
-        <button
-          className="px-4 py-2 text-lg  cursor-pointer text-white"
-          onClick={() => {
-            setFacingMode((prevMode) => (prevMode === 'user' ? 'environment' : 'user'));
-            // Re-start camera to apply new facingMode
-            stopCamera();
-            startCamera();
-          }}
-          type="button"
-        >
-          <RefreshCw size={16} />
-        </button>
+        {numberOfCameras > 1 && (
+          <button
+            className="px-4 py-2 text-lg  cursor-pointer text-white"
+            onClick={() => {
+              setFacingMode((prevMode) => (prevMode === 'user' ? 'environment' : 'user'));
+              // Re-start camera to apply new facingMode
+              stopCamera();
+              startCamera();
+            }}
+            type="button"
+          >
+            <RefreshCw size={16} />
+          </button>
+        )}
         <button
           onClick={takePhoto}
-          className="px-4 py-2  text-lg border-x-[1px] border-gray-300 cursor-pointer text-white"
+          className="px-4 py-2  text-lg border-r-[1px] border-gray-300 cursor-pointer text-white"
           type="button"
         >
           Take Photo
