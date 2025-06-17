@@ -21,7 +21,7 @@ export default function CreatePage() {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const [priceRange, setPriceRange] = useState<string | null>(null);
+  const [priceRange, setPriceRange] = useState(0);
   const [isLocating, setIsLocating] = useState(false);
 
   const { mutate: uploadImage, data: imageUrl } = useMutation({
@@ -72,27 +72,15 @@ export default function CreatePage() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="location" className="text-sm font-bold mb-2 flex items-center">
-            <MapPin size={16} className="mr-2 text-orange-500" /> Location{' '}
-            <span className="text-orange-500">*</span>
-          </label>
-          <div className="relative flex items-center">
-            <Autocomplete
-              apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
-              onPlaceSelected={(place) => {
-                setLocation({
-                  address: place.formatted_address ?? place.vicinity,
-                  latitude: place.geometry.location.lat(),
-                  longitude: place.geometry.location.lng(),
-                  googlePlaceId: place.place_id,
-                });
-              }}
-              defaultValue={location?.address || ''}
-              className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pr-10 text-slate-600"
-              placeholder="Search restaurants or type location"
-            />
+          <div className="flex justify-between">
+            <label htmlFor="location" className="text-sm font-bold mb-2 flex items-center">
+              <MapPin size={16} className="mr-2 text-orange-500" /> Location{' '}
+              <span className="text-orange-500">*</span>
+            </label>
             <button
               type="button"
+              disabled={isLocating}
+              className={`${isLocating ? 'text-gray-500' : 'text-orange-500'} font-semibold flex items-center mb-2`}
               onClick={async () => {
                 setIsLocating(true);
                 if (navigator.geolocation) {
@@ -130,8 +118,6 @@ export default function CreatePage() {
                   setIsLocating(false);
                 }
               }}
-              disabled={isLocating}
-              className="absolute right-0 top-0 mt-2 mr-2 text-orange-500 font-semibold flex items-center"
             >
               {isLocating ? (
                 'Locating...'
@@ -141,6 +127,22 @@ export default function CreatePage() {
                 </>
               )}
             </button>
+          </div>
+          <div className="relative flex items-center">
+            <Autocomplete
+              apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
+              onPlaceSelected={(place) => {
+                setLocation({
+                  address: place.formatted_address ?? place.vicinity,
+                  latitude: place.geometry.location.lat(),
+                  longitude: place.geometry.location.lng(),
+                  googlePlaceId: place.place_id,
+                });
+              }}
+              defaultValue={location?.address || ''}
+              className="shadow appearance-none rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline text-slate-600 text-ellipsis"
+              placeholder="Search restaurants or type location"
+            />
           </div>
         </div>
 
@@ -157,14 +159,14 @@ export default function CreatePage() {
             <DollarSign size={16} className="mr-2 text-orange-500" /> Price Range
           </label>
           <div className="flex space-x-2">
-            {['$', '$$', '$$$', '$$$$', '$$$$$'].map((price) => (
+            {[1, 2, 3, 4, 5].map((price) => (
               <button
                 key={price}
                 type="button"
                 onClick={() => setPriceRange(price)}
-                className={`py-2 px-4 rounded-md border ${priceRange === price ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-100 border-gray-300 text-slate-600'}`}
+                className={`py-2 px-4 rounded-md ${priceRange === price ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-100 border-gray-300 text-slate-600'}`}
               >
-                {price}
+                {'$'.repeat(price)}
               </button>
             ))}
           </div>
@@ -176,7 +178,8 @@ export default function CreatePage() {
           </label>
           <TextArea
             name="description"
-            className="h-32 w-full p-2 border rounded-md resize-none text-slate-600"
+            variant="classic"
+            className="h-32 w-full p-2 rounded-md resize-none"
             placeholder="Share your experience..."
           />
         </div>
@@ -185,7 +188,7 @@ export default function CreatePage() {
         <button
           type="submit"
           disabled={!isFormValid || isLoading}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md text-lg bg-gradient-to-tr from-ig-orange to-ig-red to-80% ${isFormValid ? 'cursor-pointer text-white' : 'grayscale text-gray-400 cursor-not-allowed'}`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-lg bg-gradient-to-tr from-ig-orange to-ig-red to-80% ${!isFormValid || isLoading ? 'grayscale text-gray-400 cursor-not-allowed' : 'cursor-pointer text-white'}`}
         >
           {isLoading ? <LoaderIcon /> : <SendIcon size={16} className="mr-2" />}
           {isLoading ? 'Loading...' : 'Publish Post'}

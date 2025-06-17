@@ -1,4 +1,4 @@
-import { CameraIcon, HomeIcon, LayoutGridIcon, SearchIcon, UserIcon } from 'lucide-react';
+import { CameraIcon, HomeIcon, LayoutGridIcon, MapIcon, SearchIcon, UserIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DesktopNav() {
@@ -11,9 +11,13 @@ export default function DesktopNav() {
           alt=""
         />
         <div className="ml-1 inline-flex flex-col gap-6 mt-4 *:flex *:items-center *:gap-2">
-          <Link href={'/'}>
+        <Link href={'/'}>
             <HomeIcon />
             Home
+          </Link>
+          <Link href={'/map'}>
+            <MapIcon />
+            Map
           </Link>
           <Link href={'/browse'}>
             <LayoutGridIcon />

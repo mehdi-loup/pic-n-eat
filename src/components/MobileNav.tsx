@@ -1,4 +1,4 @@
-import { CameraIcon, HomeIcon, LayoutGridIcon, SearchIcon, UserIcon } from 'lucide-react';
+import { CameraIcon, HomeIcon, LayoutGridIcon, MapIcon, SearchIcon, UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -11,6 +11,12 @@ export default function MobileNav() {
         <div className="pl-2 bg-white dark:bg-gray-700 rounded-t-xl w-full relative z-10 *:size-12 *:flex *:items-center *:justify-center justify-around">
           <Link href="/" className={pathname === '/' ? 'text-ig-red dark:text-ig-orange' : ''}>
             <HomeIcon />
+          </Link>
+          <Link
+            href="/map"
+            className={pathname === '/map' ? 'text-ig-red dark:text-ig-orange' : ''}
+          >
+            <MapIcon />
           </Link>
         </div>
         <div className="size-14 relative -top-4 justify-center w-[140px]">

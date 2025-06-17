@@ -27,7 +27,7 @@ export default function CommentForm({ avatar, postId }: { avatar: string; postId
           <Avatar src={avatar} />
         </div>
         <div className="w-full flex flex-col gap-2">
-          <TextArea ref={areaRef} name="text" placeholder="Tell the world what you think..." />
+          <TextArea ref={areaRef} variant='classic' name="text" placeholder="Tell the world what you think..." />
           <div>
             <Button>Post comment</Button>
           </div>
