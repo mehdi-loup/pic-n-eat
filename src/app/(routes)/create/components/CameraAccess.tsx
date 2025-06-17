@@ -1,4 +1,4 @@
-import { Camera, File as FileIcon } from 'lucide-react';
+import { Camera, File as FileIcon, RefreshCw } from 'lucide-react';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -11,10 +11,13 @@ const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
 
   const startCamera = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: facingMode },
+      });
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -25,10 +28,8 @@ const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
       console.error('Error accessing camera:', err);
       setHasPermission(false);
       // Handle denial or other errors
-    } finally {
-      setHasPermission(true);
     }
-  }, []);
+  }, [facingMode]);
 
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
@@ -180,8 +181,20 @@ const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
       />
       <div className="absolute flex items-center bottom-20 bg-gradient-to-tr from-ig-orange to-ig-red to-80% rounded-md">
         <button
+          className="px-4 py-2 text-lg  cursor-pointer text-white"
+          onClick={() => {
+            setFacingMode((prevMode) => (prevMode === 'user' ? 'environment' : 'user'));
+            // Re-start camera to apply new facingMode
+            stopCamera();
+            startCamera();
+          }}
+          type="button"
+        >
+          <RefreshCw size={16} />
+        </button>
+        <button
           onClick={takePhoto}
-          className="px-4 py-2  text-lg border-r-[1px] border-gray-300 cursor-pointer text-white"
+          className="px-4 py-2  text-lg border-x-[1px] border-gray-300 cursor-pointer text-white"
           type="button"
         >
           Take Photo

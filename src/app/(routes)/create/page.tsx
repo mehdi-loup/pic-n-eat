@@ -51,7 +51,7 @@ export default function CreatePage() {
     <form
       className="max-w-md mx-auto"
       action={async (data) => {
-        if (!imageUrl || !rating || !location) {
+        if (!isFormValid || isLoading) {
           console.error('imageUrl', imageUrl, 'rating', rating, 'location', location);
           return;
         }
