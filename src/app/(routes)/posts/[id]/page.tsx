@@ -9,7 +9,7 @@ import { Paintbrush2 } from 'lucide-react';
 
 export default function SinglePostPage({ params }: { params: { id: string } }) {
   const { user } = usePrivy();
-  const { data, isLoading, isFetching, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['post', params.id, user?.id],
     queryFn: () => {
       if (!user) throw new Error('User not authenticated');
@@ -18,12 +18,12 @@ export default function SinglePostPage({ params }: { params: { id: string } }) {
     enabled: !!user,
   });
 
-  if (isLoading || isFetching) {
-    return <Preloader />;
+  if (error) {
+    return <EmptyState title="Post not found" icon={Paintbrush2} />;
   }
 
-  if (error || !data) {
-    return <EmptyState title="Post not found" icon={Paintbrush2} />;
+  if (isLoading || !data) {
+    return <Preloader />;
   }
 
   return (

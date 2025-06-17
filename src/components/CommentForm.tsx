@@ -1,36 +1,47 @@
 'use client';
 import { postComment } from '@/actions';
-import Avatar from '@/components/Avatar';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button, TextArea } from '@radix-ui/themes';
+import { useQueryClient } from '@tanstack/react-query';
+import { SendIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useState } from 'react';
 
-export default function CommentForm({ avatar, postId }: { avatar: string; postId: string }) {
+export default function CommentForm({ postId }: { postId: string }) {
   const router = useRouter();
   const { user } = usePrivy();
-  const areaRef = useRef<HTMLTextAreaElement>(null);
+  const [commentText, setCommentText] = useState('');
+  const queryClient = useQueryClient();
+
   return (
     <form
       action={async (data) => {
-        if (!user) throw new Error('No connected user')
-        if (areaRef.current) {
-          areaRef.current.value = '';
+        if (!user) throw new Error('No connected user');
+        if (!commentText) {
+          return;
         }
         await postComment(data, user);
+        setCommentText('');
+        // Invalidate posts cache to trigger a refetch
+        queryClient.invalidateQueries({ queryKey: ['post', postId, user?.id] });
         router.refresh();
       }}
     >
       <input type="hidden" name="postId" value={postId} />
-      <div className="flex gap-2">
-        <div>
-          <Avatar src={avatar} />
-        </div>
-        <div className="w-full flex flex-col gap-2">
-          <TextArea ref={areaRef} variant='classic' name="text" placeholder="Tell the world what you think..." />
-          <div>
-            <Button>Post comment</Button>
-          </div>
+      <div className="w-full flex flex-col gap-2 relative">
+        <TextArea
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          variant="classic"
+          className="w-full"
+          name="text"
+          rows={4}
+          placeholder="Tell the world what you think..."
+        />
+        <div className="absolute bottom-2 right-2">
+          <Button type="submit" disabled={commentText === ''}>
+            <SendIcon size={14} />
+          </Button>
         </div>
       </div>
     </form>

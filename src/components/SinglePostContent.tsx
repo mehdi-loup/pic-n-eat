@@ -1,11 +1,9 @@
 import Comment from '@/components/Comment';
 import LikesInfo from '@/components/LikesInfo';
 import PostRating from '@/components/PostRating';
-import Preloader from '@/components/Preloader';
-import SessionCommentForm from '@/components/SessionCommentForm';
-import type { Comment as CommentModel, Like, Location, Post, Profile } from '@prisma/client';
+import type { Comment as CommentModel, Location, Post, Profile } from '@prisma/client';
 import { MapPin } from 'lucide-react';
-import { Suspense } from 'react';
+import CommentForm from './CommentForm';
 import PostPrice from './PostPrice';
 
 export interface Props {
@@ -23,7 +21,6 @@ export default function SinglePostContent({
   commentsAuthors,
   myLike,
 }: Props) {
-  console.log(post);
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-4">
@@ -79,9 +76,7 @@ export default function SinglePostContent({
             ) : null}
           </div>
           <div className="pt-8 border-t border-gray-300 dark:border-gray-700">
-            <Suspense fallback={<Preloader />}>
-              <SessionCommentForm postId={post.id} />
-            </Suspense>
+            <CommentForm postId={post.id} />
           </div>
         </div>
       </div>
