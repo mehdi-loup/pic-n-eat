@@ -132,8 +132,10 @@ export default function CreatePage() {
             <Autocomplete
               apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
               onPlaceSelected={(place) => {
+                if (!place.geometry?.location || !place.place_id) return;
+
                 setLocation({
-                  address: place.formatted_address ?? place.vicinity,
+                  address: place.formatted_address ?? place.vicinity ?? 'Address not found',
                   latitude: place.geometry.location.lat(),
                   longitude: place.geometry.location.lng(),
                   googlePlaceId: place.place_id,

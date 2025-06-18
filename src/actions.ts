@@ -161,3 +161,14 @@ export async function unfollowProfile(profileIdToUnfollow: string, user: User) {
     },
   });
 }
+
+// Fetch all posts with their location and author profile (for map page)
+export async function getAllPostsWithLocation() {
+  const posts = await prisma.post.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      location: true,
+    },
+  });
+  return posts;
+}

@@ -1,13 +1,13 @@
 'use server';
 
+import { getAllPostsWithLocation } from '@/actions';
+import MapClient from './MapClient';
+
 export default async function MapPage() {
-  
+  const posts = await getAllPostsWithLocation();
   return (
-    <div>
-      <div className="flex flex-col items-center mb-4">
-       <h1 className="text-4xl font-bold">Map</h1>
-        <p>In construction...</p>
-      </div>
+    <div className="max-w-3xl mx-auto py-4">
+      <MapClient posts={posts} />
     </div>
   );
 }
