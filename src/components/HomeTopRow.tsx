@@ -12,8 +12,8 @@ export default function HomeTopRow({
   const router = useRouter();
 
   return (
-    <div className="absolute top-0 -left-4 w-screen md:w-full">
-      <div className="flex gap-3 sm:justify-center w-full px-4 overflow-x-auto">
+    <div className="absolute -top-4 -left-4 py-4 w-[calc(100%+2rem)] overflow-x-auto">
+      <div className="flex gap-3 w-fit px-4">
         <div>
           <button
             type="button"

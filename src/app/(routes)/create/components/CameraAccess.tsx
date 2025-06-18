@@ -34,11 +34,15 @@ const CameraAccess: React.FC<CameraAccessProps> = ({ onImageCapture }) => {
   }, [facingMode]);
 
   const stopCamera = useCallback(() => {
+    console.debug('Trying to stop camera');
     if (streamRef.current) {
       for (const track of streamRef.current.getTracks()) {
+        console.info('Stopping 1 track');
         track.stop();
       }
       streamRef.current = null;
+    } else {
+      console.info('No stream found');
     }
   }, []);
 

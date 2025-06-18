@@ -73,9 +73,9 @@ export default function CreatePage() {
 
         <div className="mb-4">
           <div className="flex justify-between">
-            <label htmlFor="location" className="text-sm font-bold mb-2 flex items-center">
-              <MapPin size={16} className="mr-2 text-orange-500" /> Location{' '}
-              <span className="text-orange-500">*</span>
+            <label htmlFor="location" className="text-sm font-bold mb-2 flex items-center gap-1">
+              <MapPin size={16} className="text-orange-500" /> Location
+              <span>*</span>
             </label>
             <button
               type="button"
@@ -147,16 +147,16 @@ export default function CreatePage() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="rating" className="text-sm font-bold mb-2 flex items-center">
-            <Star size={16} className="mr-2 text-orange-500" /> Rating{' '}
-            <span className="text-orange-500">*</span>
+          <label htmlFor="rating" className="text-sm font-bold mb-2 flex items-center gap-1">
+            <Star size={16} className="text-orange-500" /> Rating
+            <span>*</span>
           </label>
           <PostRating onRatingChange={setRating} />
         </div>
 
         <div className="mb-4">
           <label htmlFor="price-range" className="text-sm font-bold mb-2 flex items-center">
-            <DollarSign size={16} className="mr-2 text-orange-500" /> Price Range
+            <DollarSign size={16} className="mr-1 text-orange-500" /> Price Range
           </label>
           <div className="flex space-x-2">
             {[1, 2, 3, 4, 5].map((price) => (
@@ -174,7 +174,7 @@ export default function CreatePage() {
 
         <div className="mb-4">
           <label htmlFor="caption" className="text-sm font-bold mb-2 flex items-center">
-            <Type size={16} className="mr-2 text-orange-500" /> Caption
+            <Type size={16} className="mr-1 text-orange-500" /> Caption
           </label>
           <TextArea
             name="description"
@@ -188,7 +188,7 @@ export default function CreatePage() {
         <button
           type="submit"
           disabled={!isFormValid || isLoading}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md text-lg bg-gradient-to-tr from-ig-orange to-ig-red to-80% ${!isFormValid || isLoading ? 'grayscale text-gray-400 cursor-not-allowed' : 'cursor-pointer text-white'}`}
+          className={`flex w-full justify-center items-center gap-2 px-4 py-2 rounded-md text-lg bg-gradient-to-tr from-ig-orange to-ig-red to-80% ${!isFormValid || isLoading ? 'grayscale text-gray-400 cursor-not-allowed' : 'cursor-pointer text-white'}`}
         >
           {isLoading ? <LoaderIcon /> : <SendIcon size={16} className="mr-2" />}
           {isLoading ? 'Loading...' : 'Publish Post'}
