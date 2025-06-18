@@ -1,5 +1,6 @@
 'use client';
 
+import AuthProvider from '@/components/AuthProvider';
 import { type PrivyClientConfig, PrivyProvider } from '@privy-io/react-auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
@@ -38,7 +39,7 @@ export default function Providers({ children }: ProvidersProps) {
         clientId="client-WY6MC3d5SKAJj82fBQtzhKXRW9nqFuGL9A4v8H6W7DME9"
         config={config}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </PrivyProvider>
     </QueryClientProvider>
   );

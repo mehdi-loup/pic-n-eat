@@ -6,6 +6,7 @@ import { Avatar } from '@radix-ui/themes';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Preloader from './Preloader';
+import SafeImage from './SafeImage';
 
 export default function HomePosts({
   followers,
@@ -43,13 +44,13 @@ export default function HomePosts({
 
   return (
     <div className="min-h-[calc(100vh-120px)] max-w-md mx-auto mt-32 flex flex-col gap-12">
-      {loading ? <Preloader /> : posts.length === 0 ? 'No post yet' : posts.map((post) => {
+      {loading ? <Preloader /> : posts.length === 0 ? 'No post yet. Try to follow more people☝️' : posts.map((post) => {
         const profile = followers.find((p) => p.privyId === post.author);
         const isLiked = likes.some(({ postId }) => postId === post.id)
         return (
-          <div key={post.id} className="">
+          <div key={post.id} className="w-full">
             <Link href={`/posts/${post.id}`}>
-              <img className="block rounded-lg shadow-md shadow-black/50" src={post.image} alt="" />
+              <SafeImage  src={post.image} alt={post.id} className='min-h-80' />
             </Link>
             <div className="flex items-center gap-2 mt-4 justify-between">
               <div className="flex gap-2 items-center">
