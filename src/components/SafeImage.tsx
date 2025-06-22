@@ -25,7 +25,7 @@ export default function SafeImage({ src, alt = 'Image', className, ...props }: I
   }
 
   return (
-    <div className={cn('relative overflow-hidden shadow-md w-full h-full', className)}>
+    <div className={cn('relative overflow-hidden shadow-md w-full', className)}>
       {isLoading && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse w-full min-h-[70vh]" />
       )}

@@ -47,25 +47,34 @@ export default function CreatePage() {
     return <CameraAccess onImageCapture={uploadImage} />;
   }
 
+  // New handleSubmit function
+  const handleSubmit = async () => {
+    if (!isFormValid || isLoading) {
+      return;
+    }
+    setIsLoading(true);
+    try {
+      // Construct FormData as expected by postEntry
+      const data = new FormData();
+      data.set('image', imageUrl || '');
+      data.set('location', location ? JSON.stringify(location) : '');
+      data.set('rating', rating.toString());
+      data.set('price', priceRange.toString());
+      // Get description from textarea
+      const description =
+        (document.querySelector('textarea[name="description"]') as HTMLTextAreaElement)?.value ||
+        '';
+      data.set('description', description);
+      const id = await postEntry(data, user);
+      router.push(`/posts/${id}`);
+      router.prefetch('/browse');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <form
-      className="max-w-md mx-auto"
-      action={async (data) => {
-        if (!isFormValid || isLoading) {
-          console.error('imageUrl', imageUrl, 'rating', rating, 'location', location);
-          return;
-        }
-        setIsLoading(true);
-        const id = await postEntry(data, user);
-        setIsLoading(false);
-        router.push(`/posts/${id}`);
-        router.prefetch('/browse');
-      }}
-    >
-      <input type="hidden" name="image" value={imageUrl || ''} />
-      <input type="hidden" name="location" value={location ? JSON.stringify(location) : ''} />
-      <input type="hidden" name="rating" value={rating} />
-      <input type="hidden" name="price" value={priceRange || 0} />
+    <div className="max-w-md mx-auto">
       <div className="flex flex-col gap-4">
         <div className="min-h-64 bg-gray-400 rounded-md relative">
           <img src={imageUrl} className="rounded-md" alt="" />
@@ -188,14 +197,15 @@ export default function CreatePage() {
       </div>
       <div className="flex mt-4 justify-center">
         <button
-          type="submit"
+          type="button"
           disabled={!isFormValid || isLoading}
+          onClick={handleSubmit}
           className={`flex w-full justify-center items-center gap-2 px-4 py-2 rounded-md text-lg bg-gradient-to-tr from-ig-orange to-ig-red to-80% ${!isFormValid || isLoading ? 'grayscale text-gray-400 cursor-not-allowed' : 'cursor-pointer text-white'}`}
         >
           {isLoading ? <LoaderIcon /> : <SendIcon size={16} className="mr-2" />}
           {isLoading ? 'Loading...' : 'Publish Post'}
         </button>
       </div>
-    </form>
+    </div>
   );
 }
